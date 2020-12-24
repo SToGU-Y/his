@@ -1,0 +1,49 @@
+<template>
+  <div class="selectCard">
+    <div style="background:#eee;padding:20px">
+      <Card :bordered="false">
+        <div id="cardItem">
+          <Select filterable clearable v-model="deptIdSelective" style="width:200px">
+            <Option v-for="item in deptList" :value="item.deptId" :key="item.deptId">{{ item.deptName }}</Option>
+          </Select>
+          <Input v-model="admissionNumber" placeholder="请输入住院号" clearable style="width: 200px; margin-right:5px" />
+          <Input v-model="pid"  placeholder="请输入身份证号" clearable style="width: 200px;margin-right:5px" />
+          <Input v-model="pname"  placeholder="请输入病人姓名" clearable style="width: 200px;margin-right:5px" />
+          <DatePicker v-model="admissionOfDateRange" type="daterange" placement="bottom-end" placeholder="请选择入院时间"
+            style="width: 200px;margin-right:5px"></DatePicker>
+          <Button class="search-btn" type="primary" shape="circle" icon="ios-search" @click="search()"></Button>
+        </div>
+      </Card>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        deptIdSelective: '',
+        pid:'',
+        pname:'',
+        admissionNumber:'',
+        admissionOfDateRange:[]
+      };
+    },
+    props : {
+      deptList : Array
+    }
+    ,
+    components: {},
+
+    computed: {},
+
+    methods: {
+      search(){
+        this.$emit("search",this.deptIdSelective,this.pid,this.pname,this.admissionNumber,this.admissionOfDateRange)
+      }
+    }
+  }
+
+</script>
+<style scoped>
+</style>

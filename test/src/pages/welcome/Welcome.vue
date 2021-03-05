@@ -1,23 +1,6 @@
 <template>
-  <div>
-    <h1>欢迎使用HIS系统</h1>
-    <div class="carousel-box">
-      <Carousel autoplay v-model="value2" loop>
-        <CarouselItem>
-          <div class="carousel">欢</div>
-        </CarouselItem>
-        <CarouselItem>
-          <div class="carousel">迎</div>
-        </CarouselItem>
-        <CarouselItem>
-          <div class="carousel">光</div>
-        </CarouselItem>
-        <CarouselItem>
-          <div class="carousel">临</div>
-        </CarouselItem>
-      </Carousel>
-    </div>
-    <h1>不知道放些什么东西了啦</h1>
+  <div id="welcome">
+    <div id="word"><Strong>欢迎</Strong>您使用HIS系统</div>
   </div>
 </template>
 
@@ -25,24 +8,39 @@
   export default {
     data() {
       return {
-        value2: 0
       }
     },
-
-    components: {},
-
-    computed: {},
-
     methods: {}
   }
 
 </script>
 <style scoped>
-  .carousel {
-    margin: auto;
-    text-align: center;
-    width: 100%;
-    height: 500px;
+  #welcome{
+    background-image: url('../../assets/images/bg.jpg');
+    width:100%;
+    height:100%;
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-position: center 0;
+  }
+
+  #word{
+    position: absolute;
+    left: 150px;
+    top: 150px;
+    font-size: 28px;
+    background: linear-gradient(to bottom,#a6f0c6 0%,#bbdfc8 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+
+  #word Strong{
+    font-size: 48px;
   }
 
 </style>

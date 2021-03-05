@@ -3,14 +3,15 @@
     <div style="background:#eee;padding:20px">
       <Card :bordered="false">
         <div id="cardItem">
-          <Select filterable clearable v-model="deptIdSelective" style="width:200px">
-            <Option v-for="item in deptList" :value="item.deptId" :key="item.deptId">{{ item.deptName }}</Option>
+          <Select filterable clearable v-model="deptNameSelective" style="width:200px">
+            <Option v-for="item in deptList" :value="item.deptName" :key="item.deptName">{{ item.deptName }}</Option>
           </Select>
           <Input v-model="admissionNumber" placeholder="请输入住院号" clearable style="width: 200px; margin-right:5px" />
           <Input v-model="pid"  placeholder="请输入身份证号" clearable style="width: 200px;margin-right:5px" />
           <Input v-model="pname"  placeholder="请输入病人姓名" clearable style="width: 200px;margin-right:5px" />
-          <DatePicker v-model="admissionOfDateRange" type="daterange" placement="bottom-end" placeholder="请选择入院时间"
-            style="width: 200px;margin-right:5px"></DatePicker>
+          <DatePicker v-model="admissionOfDate" type="daterange" placement="bottom-end" placeholder="请选择入院时间"
+            style="width: 200px;margin-right:5px"
+            format="yyyy-MM-dd" @on-change="setTime"></DatePicker>
           <Button class="search-btn" type="primary" shape="circle" icon="ios-search" @click="search()"></Button>
         </div>
       </Card>
@@ -22,11 +23,11 @@
   export default {
     data() {
       return {
-        deptIdSelective: '',
+        deptNameSelective: '',
         pid:'',
         pname:'',
         admissionNumber:'',
-        admissionOfDateRange:[]
+        admissionOfDate:['','']
       };
     },
     props : {
@@ -39,7 +40,10 @@
 
     methods: {
       search(){
-        this.$emit("search",this.deptIdSelective,this.pid,this.pname,this.admissionNumber,this.admissionOfDateRange)
+        this.$emit("search",this.deptNameSelective,this.pid,this.pname,this.admissionNumber,this.admissionOfDate)
+      },
+      setTime(date){
+        this.admissionOfDate = date;
       }
     }
   }

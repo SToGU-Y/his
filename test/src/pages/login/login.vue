@@ -4,7 +4,7 @@
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="login"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可</p>
+          <p class="login-tip"><a href="/patient/query">病患自助查询</a></p>
         </div>
       </Card>
     </div>
@@ -19,30 +19,28 @@
       LoginForm
     },
     methods: {
-      login({
-        sid,
-        spw
-      }) {
+      login({username,password,code}){
         this.$http({
-            url: 'http://localhost:8081/login',
-            method: 'post',
+            url: '/login',
+            method: 'POST',
             data: {
-              "sid": sid,
-              "spw": spw
+              "username": username,
+              "password": password,
+              "code" : code
             }
           })
           .then(res => {
-            if (res.status == 200) {
-              this.$router.push({
-                path: '/admin',
-                query: {
-                  sid: sid
-                }
+            if (res.data.status == 200) {
+              localStorage.setItem("TOKEN",JSON.stringify(res.data.data))
+              this.$router.push({ 
+                path: '/admin'
               });
-            } else if (res.status == 500) {
-              alert("用户不存在！")
+            } else if (res.data.status == 500) {
+              alert(res.data.msg)
             }
-          }).catch(err => {
+          })
+          .catch(err => {
+            alert("服务器出错")
             console.log(err)
           })
       }

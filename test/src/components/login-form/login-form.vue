@@ -1,18 +1,22 @@
 <template>
   <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="login">
-    <FormItem prop="sid">
-      <Input v-model="form.sid" placeholder="请输入用户名">
+    <FormItem prop="username">
+      <Input v-model="form.username" placeholder="请输入用户名">
       <span slot="prepend">
         <Icon :size="16" type="ios-person"></Icon>
       </span>
       </Input>
     </FormItem>
-    <FormItem prop="spw">
-      <Input type="password" v-model="form.spw" placeholder="请输入密码">
+    <FormItem prop="password">
+      <Input type="password" v-model="form.password" placeholder="请输入密码">
       <span slot="prepend">
         <Icon :size="14" type="md-lock"></Icon>
       </span>
       </Input>
+    </FormItem>
+    <FormItem prop="code">
+      <Input type="text" v-model="form.code" placeholder="请输入验证码" style="width: 150px" />
+      <img :src="vcUrl" @click="updateVerifyCode" style="cursor: pointer">
     </FormItem>
     <FormItem>
       <Button @click="login" type="primary" long>登录</Button>
@@ -23,7 +27,7 @@
   export default {
     name: 'LoginForm',
     props: {
-      sidRules: {
+      usernameRules: {
         type: Array,
         default: () => {
           return [{
@@ -33,7 +37,7 @@
           }]
         }
       },
-      spwRules: {
+      passwordRules: {
         type: Array,
         default: () => {
           return [{
@@ -42,21 +46,34 @@
             trigger: 'blur'
           }]
         }
+      },
+      codeRules: {
+        type: Array,
+        default: () => {
+          return [{
+            required: true,
+            message: '验证码不能为空',
+            trigger: 'blur'
+          }]
+        }
       }
     },
     data() {
       return {
+        vcUrl: 'http://localhost:8081/verifyCode?time=' + new Date(),
         form: {
-          sid: '',
-          spw: ''
+          username: '',
+          password: '',
+          code : ''
         }
       }
     },
     computed: {
       rules() {
         return {
-          sid: this.sidRules,
-          spw: this.spwRules
+          username: this.usernameRules,
+          password: this.passwordRules,
+          code: this.codeRules
         }
       }
     },
@@ -65,11 +82,15 @@
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
             this.$emit('on-success-valid', {
-              sid: this.form.sid,
-              spw: this.form.spw
+              username: this.form.username,
+              password: this.form.password,
+              code: this.form.code
             })
           }
         })
+      },
+      updateVerifyCode() {
+        this.vcUrl = 'http://localhost:8081/verifyCode?time=' + new Date();
       }
     }
   }

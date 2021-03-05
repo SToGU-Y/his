@@ -1,18 +1,14 @@
 <style scoped>
   #cardItem .ivu-input-wrapper {
-    margin: 0 20px 0 0;
-  }
-
-  .search-btn {
-    float: right;
+    margin: 0 10px 0 0;
   }
 
   .page-box {
-    margin-top: 5px;
+    margin-top: 10px;
   }
 
   .card-box {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
 </style>
@@ -26,16 +22,16 @@
           <Input placeholder="请输入身份证号" v-model="pid" autofocus clearable style="width: 200px;" />
           <Input placeholder="请输入姓名" v-model="pname" clearable style="width: 200px;" />
           <Button class="search-btn" type="primary" shape="circle" icon="ios-search"
-            @click="getPatientByConditions()"></Button>
+            @click="getPatient"></Button>
         </div>
       </Card>
     </div>
     <!-- 查询结果表格之类的 -->
-    <Table height="500px;" :loading="loading" border :columns="columns" :data="patientlist">
+    <Table :loading="loading" border :columns="columns" :data="patientlist">
     </Table>
     <!-- 分页模块 -->
     <div class="page-box">
-      <Page :total="100" show-elevator />
+      <Page :total="total" show-elevator @on-change="pageChange"/>
     </div>
   </div>
 </template>
@@ -63,12 +59,6 @@
             title: '性别',
             key: 'sex',
             width: 80
-          },
-          {
-            title: '年龄',
-            key: 'age',
-            width: 100,
-            sortable: true
           },
           {
             title: '出生年月日',
@@ -139,7 +129,8 @@
         total: 100,
         pid: '',
         pname: '',
-        loading: true
+        loading: true,
+        total:0
       };
     },
     created() {
@@ -148,43 +139,44 @@
     methods: {
       getPatient() {
         this.$http({
-            url: 'http://localhost:8081/patient/getPatient',
-            method: "GET"
-          })
-          .then(res => {
-            if (res.status == 200) {
-              if (res.data.status == 200) {
-                this.patientlist = res.data.data;
-                this.loading = false;
-              }
-            }
-          })
-          .catch(err => {
-            this.$Message.error("服务器出错！")
-          })
-      },
-      getPatientByConditions() {
-        this.loading = true;
-        this.$http({
-            url: 'http://localhost:8081/patient/getPatientByCondition',
+            url: 'patient/getPatientByCondition',
             method: "GET",
             params: {
               pid: this.pid,
               pname: this.pname
             }
           })
-          .then(res => {
-            if (res.status == 200) {
+          .then(res => {    
               if (res.data.status == 200) {
-                this.patientlist = res.data.data;
+                this.patientlist = res.data.data.list;
+                this.total = res.data.data.total
                 this.loading = false;
               }
-            }
           })
           .catch(err => {
             this.$Message.error("服务器出错！")
           })
+      },
+      pageChange(pageNum) {
+        this.$http({
+            url:'patient/getPatientByCondition',
+            method:'GET',
+            params:{
+              pid: this.pid,
+              pname: this.pname,
+              pageNum: pageNum
+            } 
+          })
+          .then(res=>{
+              if (res.data.status === 200) {
+                this.datas = res.data.data.list
+              }
+          })
+          .catch(err=>{
+            console.log(err);
+          })
       }
+
     }
   }
 
